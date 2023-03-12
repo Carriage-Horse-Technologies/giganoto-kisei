@@ -1,0 +1,41 @@
+{
+  "deploymentConfiguration": {
+    "deploymentCircuitBreaker": {
+      "enable": false,
+      "rollback": false
+    },
+    "maximumPercent": 200,
+    "minimumHealthyPercent": 100
+  },
+  "desiredCount": 1,
+  "enableECSManagedTags": true,
+  "enableExecuteCommand": true,
+  "healthCheckGracePeriodSeconds": 0,
+  "launchType": "FARGATE",
+  "loadBalancers": [
+    {
+      "containerName": "giganoto-kisei-fastapi",
+      "containerPort": 8000,
+      "targetGroupArn": "{{ tfstate `aws_lb_target_group.GiganotoKiseiFastApiTG.arn` }}"
+    }
+  ],
+  "networkConfiguration": {
+    "awsvpcConfiguration": {
+      "assignPublicIp": "ENABLED",
+      "securityGroups": [
+        "{{ tfstate `aws_security_group.GiganotoKiseiFastApiECSTaskSecurityGroup.id` }}"
+      ],
+      "subnets": [
+        "{{ tfstate `aws_subnet.GiganotoKiseiFastApiPublicSubnet1.id` }}",
+        "{{ tfstate `aws_subnet.GiganotoKiseiFastApiPublicSubnet2.id` }}"
+      ]
+    }
+  },
+  "placementConstraints": [],
+  "placementStrategy": [],
+  "platformFamily": "Linux",
+  "platformVersion": "LATEST",
+  "schedulingStrategy": "REPLICA",
+  "serviceRegistries": [],
+  "tags": []
+}
